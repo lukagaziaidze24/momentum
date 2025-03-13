@@ -1,0 +1,40 @@
+:root{
+    --primaryMagenta: #8338EC;
+    --main-background-color: #ffff;
+    --light-black: #212529;
+}
+.container{
+    max-width: 1920px;
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    min-height: 100dvh;
+    grid-template-rows: min-content 1fr;
+}
+
+
+/* common tags >> */
+    /* common text tags >> */
+.standard-text-size{
+    font-family: "firaGo-400", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    text-align: center;
+}
+
+
+
+
+
+
+
+.common-blue-border-button{
+    padding: 10px 20px;
+    border: 1px solid var(--primaryMagenta);
+    border-radius: 5px;
+    color: var(--light-black);
+    font-family: "firaGo-400", Helvetica, Arial, sans-serif;
+
+}

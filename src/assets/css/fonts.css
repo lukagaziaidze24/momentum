@@ -1,0 +1,20 @@
+@font-face {
+    font-family: "fredoka-400";
+    src: url("../fonts/ttf/Fredoka_Condensed-Regular.ttf") format('truetype');
+}
+@font-face {
+    font-family: "firaGo-300";
+    src: url("../fonts/ttf/firago-latin-300-normal.ttf") format('truetype');
+}
+@font-face {
+    font-family: "firaGo-400";
+    src: url("../fonts/ttf/firago-latin-400-normal.ttf") format('truetype');
+}
+@font-face {
+    font-family: "firaGo-500";
+    src: url("../fonts/ttf/firago-latin-500-normal.ttf") format('truetype');
+}
+@font-face {
+    font-family: "firaGo-600";
+    src: url("../fonts/ttf/firago-latin-600-normal.ttf") format('truetype');
+}
