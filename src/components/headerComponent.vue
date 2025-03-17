@@ -1,11 +1,11 @@
 <template>
     <header class="header-wrapper d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-1">
-            <p class="header-title">Momentum</p>
+            <h1 class="header-title">Momentum</h1>
             <img src="@/assets/images/header/Hourglass.svg" alt="img">
         </div>
         <div class="d-flex align-items-stretch gap-2 standard-text-size">
-            <button class="common-blue-border-button">
+            <button @click="openMainModal()" class="common-blue-border-button">
                 თანამშრომლის შექმნა
             </button>
             <btnWithPlus>
@@ -21,12 +21,17 @@ import btnWithPlus from './btnWithPlus.vue';
 export default {
     components: {
         btnWithPlus,
+    },
+    methods: {
+        openMainModal(){
+            this.$store.state.isMainModalOpen = true;
+        }
     }
 }
 </script>
 <style lang="scss" scoped>
 .header-wrapper{
-    padding: 31px 120px;
+    padding: 31px 0;
     .header-title{
         font-family: "fredoka-400", Helvetica, Arial, sans-serif;
         font-weight: 600;

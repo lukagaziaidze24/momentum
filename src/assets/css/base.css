@@ -2,26 +2,55 @@
     --primaryMagenta: #8338EC;
     --main-background-color: #ffff;
     --light-black: #212529;
+    --middle-black: #0D0F10;
+    --extra-light-gray: #DEE2E6;
+    --extra-yellow: #F7BC30;
+    --light-yellow: #FFBE0B;
+
+    --extra-orange: #FB5607;
+
+    --extra-pink: #FF006E;
+
+    --extra-blue: #3A86FF;
+    --middle-green: #08A508;
 }
 .container{
     max-width: 1920px;
     width: 100%;
     margin: 0 auto;
     display: grid;
+    row-gap: 40px;
     min-height: 100dvh;
     grid-template-rows: min-content 1fr;
+    padding: 0 120px 150px 120px;
 }
-
 
 /* common tags >> */
     /* common text tags >> */
+.light-text-size{
+    font-family: "firaGo-400", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+}
+.before-standard-text-size{
+    font-family: "firaGo-400", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
 .standard-text-size{
     font-family: "firaGo-400", Helvetica, Arial, sans-serif;
     font-weight: 400;
     font-size: 16px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    text-align: center;
+}
+.slightly-large-text-size{
+    font-family: "firaGo-500", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+}
+.extra-large-text-size{
+    font-family: "firaGo-600", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 34px;
 }
 
 
@@ -29,6 +58,8 @@
 
 
 
+
+/* common patterns >> */
 
 .common-blue-border-button{
     padding: 10px 20px;
@@ -36,5 +67,23 @@
     border-radius: 5px;
     color: var(--light-black);
     font-family: "firaGo-400", Helvetica, Arial, sans-serif;
+}
 
+
+/* common helpers >> */
+
+.cursor-pointer{
+    cursor: pointer;
+}
+.br-5{
+    border-radius: 5px;
+}
+.br-10{
+    border-radius: 10px;
+}
+.br-15{
+    border-radius: 15px;
+}
+.color-white{
+    color: var(--main-background-color);
 }
