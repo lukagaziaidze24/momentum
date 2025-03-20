@@ -33,7 +33,7 @@
                     <div v-if="chosenBtnObj?.content == 'თანამშრომელი'">
                         <form ref="employeeFiltersForm" @submit.prevent="submitEmployees()" class="d-flex flex-column align-items-start gap-2">
                             <fieldset v-for="(employeeObj, i) of employeesOptionsArr" class="d-flex align-items-center gap-2 cursor-pointer">
-                                <input @click="toggleEmployeeCheckBox" :name="`employee`" :id="`employee${employeeObj.id}`" class="filter-checkbox cursor-pointer" type="radio" v-model="employeesOptionsSelectedVal" :value="employeeObj.id">
+                                <input @click="toggleEmployeeCheckBox" name="employee" :id="`employee${employeeObj.id}`" class="filter-checkbox cursor-pointer" type="radio" :checked="employeesOptionsSelectedVal == employeeObj.id" v-model="employeesOptionsSelectedVal" :value="employeeObj.id">
                                 <label :for="`employee${employeeObj.id}`" class="d-flex align-items-center gap-2 cursor-pointer">
                                     <img loading="lazy" class="filters-img" :src="employeeObj?.avatar" alt="avatarImg">
                                     <p class="standard-text-size">{{ `${employeeObj?.name} ${employeeObj?.surname}` }}</p>
@@ -57,7 +57,7 @@
                 <div class="assignment-cards-cols-wrapper">
                     <ul v-for="(tasksArr, i) of [toDoTasks, tasksInProgress, readyForTestingTasks, doneTasks]" class="assignment-cards-col d-flex flex-column align-items-stretch">
                         <li v-for="(toDoTask, i) of tasksArr">
-                            <article :class="['d-flex', 'primary-card', 'flex-column', {'yellow': toDoTask.status.id == 1}, {'orange': toDoTask.status.id == 2}, {'pink': toDoTask.status.id == 3}, {'blue': toDoTask.status.id == 4}]">
+                            <article @click.prevent="showDetailedTask(toDoTask.id)" :class="['d-flex', 'primary-card', 'cursor-pointer', 'flex-column', {'yellow': toDoTask.status.id == 1}, {'orange': toDoTask.status.id == 2}, {'pink': toDoTask.status.id == 3}, {'blue': toDoTask.status.id == 4}]">
                                 <div class="d-flex align-items-center justify-content-between light-text-size">
                                     <div class="d-flex align-items-center gap-2">
                                         <div :class="['priority-indicator', {'green': toDoTask.priority.id == 1}, {'yellow': toDoTask.priority.id == 2}, {'orange': toDoTask.priority.id == 3}, 'd-flex', 'align-items-center', 'gap-1', 'br-5']">
@@ -67,7 +67,7 @@
                                             <p>{{ toDoTask.priority.name }}</p>
                                         </div>
                                     </div>
-                                    <p>{{ `${new Date(toDoTask.due_date).getDate()} ${dateArr[new Date(toDoTask.due_date).getMonth()]}, ${new Date(toDoTask.due_date).getFullYear()}` }}</p>
+                                    <p>{{ `${new Date(toDoTask.due_date).getDate()} ${this.$helper.MonthArr[new Date(toDoTask.due_date).getMonth()]}, ${new Date(toDoTask.due_date).getFullYear()}` }}</p>
                                 </div>
                                 <div class="d-flex flex-column align-items-stretch gap-3">
                                     <h5 class="slightly-large-text-size">{{ toDoTask.name }}</h5>
@@ -93,6 +93,7 @@
 <script>
 import btnWithPlus from '@/components/btnWithPlus.vue';
 import filterComponent from '@/components/filterComponent.vue';
+import { mapGetters } from 'vuex';
 export default {
     data(){
         return {
@@ -130,10 +131,17 @@ export default {
             tasksInProgress: [],
             readyForTestingTasks: [],
             doneTasks: [],
-            dateArr: [
-                'იან','თებ','მარტ','აპრ','მაი','ივნ','ივლ','აგვ','სექ','ოქტ','ნოე','დეკ',
-            ],
         }
+    },
+    computed: {
+        ...mapGetters({
+            employeeAddedTriggerVal: "getEmployeeAddedTriggerVal",
+        })
+    },
+    watch: {
+        employeeAddedTriggerVal(){
+            this.getEmployees();
+        },
     },
     mounted(){
         this.routerMountMovement(this.$route);
@@ -144,6 +152,9 @@ export default {
     },
     beforeRouteUpdate(to, from, next){
         this.getInfoFromRoute(to);
+        this.manageDepartments();
+        this.managePriorities();
+        this.manageEmployees();
         this.filterAllTasks();
         // this.getTasks();
         next(true);
@@ -156,17 +167,20 @@ export default {
         getInfoFromRoute(to){
             Object.keys(this.filteringInfo).forEach((key) => {
                 this.filteringInfo[key] = null;
-                console.log(to.query[key]);
                 if(key == "selectedEmployeesIDs" && this.checkNumber(decodeURIComponent(to.query[key]?.replace(/%/g, "%25")))){
                     this.filteringInfo[key] = decodeURIComponent(to.query[key]?.replace(/%/g, "%25"));
+                    this.checkedRadioBtnValue = this.filteringInfo[key];
 
                 }else if(key !== "selectedEmployeesIDs" && this.checkFilterItem(decodeURIComponent(to.query[key]?.replace(/%/g, "%25")))){
                     this.filteringInfo[key] = decodeURIComponent(to.query[key]?.replace(/%/g, "%25"));
                 }
             });
-            console.log(this.filteringInfo);
         },
-        
+        showDetailedTask(taskID){
+            this.$router.push({
+                path: `/detailedCardInfo/${taskID}`,
+            });
+        },
         filterAllTasks(){
             this.toDoTasks = [];
             this.tasksInProgress = [];
@@ -174,7 +188,6 @@ export default {
             this.doneTasks = [];
             let selectedDepartments = this.filteringInfo.selectedDepartmentsIDs?.split(",");
             let selectedPriorities = this.filteringInfo.selectedPrioritiesIDs?.split(",");
-            console.log(selectedPriorities);
             
 
             let conformsDepatrmentsFilters;
@@ -191,8 +204,6 @@ export default {
 
                 if(selectedPriorities?.length > 0){
                     conformsPrioritiesFilters = selectedPriorities.some((priorityID) => {
-                        console.log(priorityID);
-                        console.log(taskObj.priority.id);
                         
                         return priorityID == taskObj.priority.id;
                     })
@@ -210,7 +221,6 @@ export default {
 
                 
                 if(conformsDepatrmentsFilters && conformsPrioritiesFilters && conformsEmployeeFilter){
-                    console.log("sheushva");
                     
                     this.pushInTasks(taskObj);
                 }
@@ -220,21 +230,18 @@ export default {
             });
         },
         checkNumber(item){
-            return /^[\d]+$/.test(String(item));
+            return this.$helper.checkNumber(item);
         },
         checkFilterItem(item){
             return /^[\d,]+$/.test(String(item));
         },
         toggleEmployeeCheckBox(e){
-            console.log(e.target);
-            console.log(this.checkedRadioBtnValue);
             if(e.target.checked && e.target.value == this.checkedRadioBtnValue){
                 this.employeesOptionsSelectedVal = null;
             }
             this.checkedRadioBtnValue = e.target.value;
         },
         submitEmployees(){
-            console.log(this.employeesOptionsSelectedVal);
             
             if(this.employeesOptionsSelectedVal){
                 this.$router.push({
@@ -268,10 +275,8 @@ export default {
                     selectedPrioritiesIDs: selectedPrioritiesIDInStr,
                 },
             });
-            console.log(selectedPrioritiesIDInStr);
         },
         submitDepartments(){
-            console.log(this.departmentsOptionsArr);
             let selectedDepartmentsIDInStr = "";
             this.departmentsOptionsArr.forEach((departmentObj) => {
                 if(departmentObj.vmodel){
@@ -285,7 +290,6 @@ export default {
                     selectedDepartmentsIDs: selectedDepartmentsIDInStr,
                 },
             });
-            console.log(selectedDepartmentsIDInStr);
         },
         closeFiltersBody(){
             this.filtersCloseTrigger = !this.filtersCloseTrigger;
@@ -322,6 +326,17 @@ export default {
                 this.statusesArray = response.data;
             });
         },
+        manageDepartments(){
+            let chosenDepartmentIDs = this.filteringInfo.selectedDepartmentsIDs?.split(",");
+
+            this.departmentsOptionsArr.forEach((obj) => {
+                if(chosenDepartmentIDs?.includes(String(obj.id))){
+                    obj.vmodel = true;
+                }else{
+                    obj.vmodel = false;
+                }
+            });
+        },
         getDepartments(){
             this.$store.dispatch("getDepartments").then((response) => {
                 let chosenDepartmentIDs = this.filteringInfo.selectedDepartmentsIDs?.split(",");
@@ -339,6 +354,17 @@ export default {
                         });
                     }
                 });
+            });
+        },
+        managePriorities(){
+            let chosenPrioritiesIDs = this.filteringInfo.selectedPrioritiesIDs?.split(",");
+
+            this.prioritiesOptionsArr.forEach((obj) => {
+                if(chosenPrioritiesIDs?.includes(String(obj.id))){
+                    obj.vmodel = true;
+                }else{
+                    obj.vmodel = false;
+                }
             });
         },
         getPriorities(){
@@ -359,6 +385,9 @@ export default {
                     }
                 });
             });
+        },
+        manageEmployees(){
+            this.employeesOptionsSelectedVal = this.filteringInfo.selectedEmployeesIDs;
         },
         getEmployees(){
             this.$store.dispatch("getEmployees").then((response) => {
@@ -436,22 +465,6 @@ export default {
                 border-radius: 15px;
                 padding: 20px;
                 row-gap: 28px;
-                .priority-indicator{
-                    
-                    padding: 4px 6px;
-                    &.yellow{
-                        border: 0.5px solid var(--light-yellow);
-                        color: var(--light-yellow);
-                    }
-                    &.orange{
-                        border: 0.5px solid var(--extra-orange);
-                        color: var(--extra-orange);
-                    }
-                    &.green{
-                        border: 0.5px solid var(--middle-green);
-                        color: var(--middle-green);
-                    }
-                }
                 &.yellow{
                     border: 1px solid var(--extra-yellow);
                 }

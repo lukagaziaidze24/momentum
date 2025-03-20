@@ -42,8 +42,6 @@ export default {
     },
     methods: {
         openLowPart(chosenBtnObj){
-            console.log(this.chosenBtnObj);
-            console.log(chosenBtnObj);
             
             if(this.chosenBtnObj?.content == chosenBtnObj.content && this.chosenBtnObj?.isChosen == true){
                 this.$refs.filterContainer.classList.remove("active");
@@ -106,8 +104,5 @@ export default {
         overflow: hidden;
         padding: 0 40px;
     }
-}
-.commmon-transition{
-    transition: all 0.3s ease-out;
 }
 </style>

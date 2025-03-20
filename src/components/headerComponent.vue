@@ -1,9 +1,9 @@
 <template>
     <header class="header-wrapper d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-1">
+        <router-link class="router-link d-flex align-items-center gap-1" to="/">
             <h1 class="header-title">Momentum</h1>
             <img src="@/assets/images/header/Hourglass.svg" alt="img">
-        </div>
+        </router-link>
         <div class="d-flex align-items-stretch gap-2 standard-text-size">
             <button @click="openMainModal()" class="common-blue-border-button">
                 თანამშრომლის შექმნა

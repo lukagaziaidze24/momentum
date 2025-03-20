@@ -15,7 +15,7 @@ const routes = [
         component: assignments,
       },
       {
-        path: '/detailedCardInfo',
+        path: '/detailedCardInfo/:taskID(\\d+)',
         name: 'detailedCardInfo',
         component: detailedCardInfo,
         // route level code-splitting
