@@ -23,10 +23,11 @@ export default {
     },
     isPhotoUploadedValid(file){
         if(file?.type){
-            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+            // const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+            // isFileImage = validImageTypes.includes(decodeURIComponent(file.type));
             let isFileImage = false;
             let isUnder600KB = false;
-            isFileImage = validImageTypes.includes(decodeURIComponent(file.type));
+            isFileImage = /^image\/(.)+$/.test(file.type);
             isUnder600KB = file.size <= 600 * 1024;
             let errorArray = [];
             if(!isFileImage){

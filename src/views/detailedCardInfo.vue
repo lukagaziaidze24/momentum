@@ -95,8 +95,6 @@
                                 <div class="d-flex flex-column gap-2 pt-1 w-100">
                                     <h6 class="slightly-large-text-size18">{{ taskCommentObj.author_nickname }}</h6>
                                     <p class="standard-text-size">{{ taskCommentObj.text }}</p>
-                                    <p>{{ taskCommentObj.id }}</p>
-                                    <!-- v-if="taskCommentObj.sub_comments?.length == 0" -->
                                     <accordion :closeTrigger="commentReplyBodyCloseIndicator" @openModeChange="(isOpen) => {handleCommentReplyBodyClose(isOpen, `replyCommentForm${taskCommentObj.id}`)}"> 
                                         <template v-slot:accordionHead>
                                             <button class="d-flex align-items-center gap-2 cursor-pointer">
